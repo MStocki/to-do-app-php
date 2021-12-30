@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Twoje zadania{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="example-wrapper">  
+        <h1>
+            Hello {{app.user.firstName}} {{app.user.lastName}}
+        </h1>
+        <h4>
+            {{app.user.email}}
+            <a href="{{ path('app_logout') }}">Wyloguj</a>
+        </h4>
+    <div>
+        <h4>Aktywne zadania</h4>
+        <ul>
+            {% for task in app.user.tasksActive%}
+                <li>
+                    {{task.name}}
+                    <a href="{{ path('taskActiveDetails', {'id': task.id}) }}">Szczegóły</a>
+                </li>
+            {% endfor%}
+        </ul>
+        <button>Dodaj zadanie</button>
+    </div>
+    <div>
+        <h4>Archiwalne zadania</h4>
+        <ul>
+            {% for task in app.user.tasksArchive%}
+                <li>
+                    {{task.name}}
+                    <a href="{{ path('taskArchiveDetails', {'id': task.id}) }}">Szczegóły</a>
+                </li>
+            {% endfor%}
+        </ul>
+    </div>
+</div>
+{% endblock %}
