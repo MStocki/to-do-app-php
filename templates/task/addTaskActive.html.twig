@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Dodaj zadanie{% endblock %}
+
+{% block body %}
+    <h1>Dodaj zadanie</h1>
+
+    {{ form_start(addTaskForm) }}
+        {{ form_row(addTaskForm.name) }}
+        {{ form_row(addTaskForm.description) }}
+        {{ form_row(addTaskForm.status) }}
+        {{ form_row(addTaskForm.deadline)}}
+        <button type="submit" class="btn">Dodaj</button>
+    {{ form_end(addTaskForm) }}
+{% endblock %}
