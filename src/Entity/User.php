@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -33,6 +35,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 50)]
     private $lastName;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: TaskActive::class)]
+    private $tasksActive;
+
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: TaskArchive::class)]
+    private $tasksArchive;
+
+    public function __construct()
+    {
+        $this->tasksActive = new ArrayCollection();
+        $this->tasksArchive = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -124,6 +138,66 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskActive[]
+     */
+    public function getTasksActive(): Collection
+    {
+        return $this->tasksActive;
+    }
+
+    public function addTasksActive(TaskActive $tasksActive): self
+    {
+        if (!$this->tasksActive->contains($tasksActive)) {
+            $this->tasksActive[] = $tasksActive;
+            $tasksActive->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTasksActive(TaskActive $tasksActive): self
+    {
+        if ($this->tasksActive->removeElement($tasksActive)) {
+            // set the owning side to null (unless already changed)
+            if ($tasksActive->getUser() === $this) {
+                $tasksActive->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TaskArchive[]
+     */
+    public function getTasksArchive(): Collection
+    {
+        return $this->tasksArchive;
+    }
+
+    public function addTasksArchive(TaskArchive $tasksArchive): self
+    {
+        if (!$this->tasksArchive->contains($tasksArchive)) {
+            $this->tasksArchive[] = $tasksArchive;
+            $tasksArchive->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTasksArchive(TaskArchive $tasksArchive): self
+    {
+        if ($this->tasksArchive->removeElement($tasksArchive)) {
+            // set the owning side to null (unless already changed)
+            if ($tasksArchive->getUser() === $this) {
+                $tasksArchive->setUser(null);
+            }
+        }
 
         return $this;
     }
