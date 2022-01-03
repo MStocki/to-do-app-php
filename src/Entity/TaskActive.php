@@ -19,9 +19,6 @@ class TaskActive
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private $status;
-
     #[ORM\Column(type: 'date')]
     private $createdAt;
 

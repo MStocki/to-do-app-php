@@ -19,6 +19,14 @@ class TaskActiveRepository extends ServiceEntityRepository
         parent::__construct($registry, TaskActive::class);
     }
 
+    public function persist(TaskActive $task):void
+    {
+        $this->_em->persist($task);
+    }
+    public function flush():void
+    {
+        $this->_em->flush();
+    }
     // /**
     //  * @return TaskActive[] Returns an array of TaskActive objects
     //  */
