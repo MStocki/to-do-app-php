@@ -5,10 +5,11 @@
 {% block body %}
     <h1>Dodaj zadanie</h1>
 
-    {{ form_start(addTaskForm) }}
-        {{ form_row(addTaskForm.name) }}
-        {{ form_row(addTaskForm.description) }}
-        {{ form_row(addTaskForm.deadline)}}
+    {{ form_start(addActiveTaskForm) }}
+        {{ form_row(addActiveTaskForm.name) }}
+        {{ form_row(addActiveTaskForm.description) }}
+        {{ form_row(addActiveTaskForm.status) }}
+        {{ form_row(addActiveTaskForm.deadline)}}
         <button type="submit" class="btn">Dodaj</button>
-    {{ form_end(addTaskForm) }}
+    {{ form_end(addActiveTaskForm) }}
 {% endblock %}

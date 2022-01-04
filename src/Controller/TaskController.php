@@ -2,25 +2,42 @@
 
 namespace App\Controller;
 
-use App\Services\TaskService;
+use App\Services\TaskActiveService;
+use App\Services\TaskArchiveService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\Persistence\ManagerRegistry;
 
 class TaskController extends AbstractController
 {
-    private TaskService $taskService;
+    private TaskActiveService $taskActiveService;
+    private TaskArchiveService $taskArchiveService;
 
-    public function __construct(TaskService $taskService){
-        $this->taskService=$taskService;
+    public function __construct(
+        TaskActiveService $taskActiveService,
+        TaskArchiveService $taskArchiveService)
+    {
+        $this->taskActiveService = $taskActiveService;
+        $this->taskArchiveService = $taskArchiveService;
     }
 
-    #[Route('/task/new', name: 'taskNew')]
+    #[Route('/task/active/new', name: 'taskActiveNew')]
     public function createTaskActive(Request $request): Response
     {
-        return $this->taskService->createTaskActive($request);
+        return $this->taskActiveService->createTaskActive($request);
+    }
+
+    #[Route('/task/active/edit/{id}', name: 'taskActiveEdit')]
+    public function editTaskActive(Request $request, int $id): Response
+    {
+        return $this->taskActiveService->editTaskActive($request,$id);
+    }
+
+    #[Route('/task/active/close/{id}', name: 'taskActiveClose')]
+    public function closeTaskActive(Request $request, int $id): Response
+    {
+        return $this->taskActiveService->closeTaskActive($request,$id);
     }
 
     #[Route('/task', name: 'task')]
@@ -30,15 +47,15 @@ class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/task/{id}', name: 'taskActiveDetails', methods: ['GET'])]
+    #[Route('/task/active/{id}', name: 'taskActiveDetails', methods: ['GET'])]
     public function  taskActiveDetail(int $id):Response
     {
-        return $this->taskService->taskActiveDetail($id);
+        return $this->taskActiveService->taskActiveDetail($id);
     }
 
-    #[Route('/task/{id}', name: 'taskArchiveDetails', methods: ['GET'])]
-    public function taskArchiveDetail(ManagerRegistry $doctrine, int $id): Response
+    #[Route('/task/archive/{id}', name: 'taskArchiveDetails', methods: ['GET'])]
+    public function taskArchiveDetail(int $id): Response
     {
-        return $this->taskService->taskArchiveDetail($id);
+        return $this->taskArchiveService->taskArchiveDetail($id);
     }
 }

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edytuj zadanie{% endblock %}
+
+{% block body %}
+    {{ form_start(editActiveTaskForm) }}
+    <h1>Edytuj zadanie</h1>
+    <h4>
+        Nazwa: {{name}}
+    </h4>
+    <h4>
+        {{ form_row(editActiveTaskForm.description, {'label': 'Opis: '}) }}
+    </h4>
+    <h4>
+        Status: {{status}}
+    </h4>
+    <h4>
+        Utworzone dnia: {{createdAt}}
+    </h4>
+    <h4>
+        Deadline: {{deadline}}
+    </h4>
+    <button type="submit" class="btn">Zapisz zmiany</button>
+    {{ form_end(editActiveTaskForm) }}
+{% endblock %}

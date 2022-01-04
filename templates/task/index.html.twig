@@ -10,7 +10,7 @@
 
 <div class="example-wrapper">  
         <h1>
-            Hello {{app.user.firstName}} {{app.user.lastName}}
+            Witaj {{app.user.firstName}} {{app.user.lastName}}
         </h1>
         <h4>
             {{app.user.email}}
@@ -23,10 +23,11 @@
                 <li>
                     {{task.name}}
                     <a href="{{ path('taskActiveDetails', {'id': task.id}) }}">Szczegóły</a>
+                    <a href="{{ path('taskActiveClose', {'id': task.id}) }}">Zakończ</a>
                 </li>
             {% endfor%}
         </ul>
-        <a href="{{ path('taskNew') }}">Dodaj zadanie</a>
+        <a href="{{ path('taskActiveNew') }}">Dodaj zadanie</a>
     </div>
     <div>
         <h4>Archiwalne zadania</h4>

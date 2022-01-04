@@ -22,6 +22,9 @@ class TaskActive
     #[ORM\Column(type: 'date')]
     private $createdAt;
 
+    #[ORM\Column(type: 'string',length: 50)]
+    private $status;
+
     #[ORM\Column(type: 'date')]
     private $deadline;
 

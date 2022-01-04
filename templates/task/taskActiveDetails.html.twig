@@ -8,21 +8,28 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="example-wrapper">  
-        <h1>
-           Zadanie
-        </h1>
+<div class="example-wrapper">
+        <div>
+            <h1>
+               Zadanie
+            </h1>
+                <a href="{{ path('taskActiveEdit', {'id': id}) }}">Edytuj</a>
+                <button>Usuń</button>
+        </div>
         <h4>
-            {{name}}
+           Nazwa: {{name}}
         </h4>
          <h4>
-            {{description}}
+           Opis: {{description}}
         </h4>
         <h4>
-            {{createdAt}}
+            Status: {{status}}
         </h4>
         <h4>
-            {{deadline}}
+           Utworzone dnia: {{createdAt}}
+        </h4>
+        <h4>
+            Deadline: {{deadline}}
         </h4>
 </div>
 {% endblock %}

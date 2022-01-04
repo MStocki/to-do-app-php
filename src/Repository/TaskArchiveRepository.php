@@ -18,7 +18,14 @@ class TaskArchiveRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TaskArchive::class);
     }
-
+    public function persist(TaskArchive $task):void
+    {
+        $this->_em->persist($task);
+    }
+    public function flush():void
+    {
+        $this->_em->flush();
+    }
     // /**
     //  * @return TaskArchive[] Returns an array of TaskArchive objects
     //  */
