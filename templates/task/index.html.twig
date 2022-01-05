@@ -23,7 +23,7 @@
                 <li>
                     {{task.name}}
                     <a href="{{ path('taskActiveDetails', {'id': task.id}) }}">Szczegóły</a>
-                    <a href="{{ path('taskActiveClose', {'id': task.id}) }}">Zakończ</a>
+                    <button onClick="closeTask({{ task.id }})">Zakończ</button>
                 </li>
             {% endfor%}
         </ul>
@@ -41,4 +41,15 @@
         </ul>
     </div>
 </div>
+    <script>
+        function closeTask(id) {
+            $.ajax({
+                    url: "/task/active/"+id+"/close",
+                    type:'POST'
+                })
+                .fail(function(){
+                    alert("error");
+                })
+        }
+    </script>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Entity\TaskArchive;
 use App\Form\AddActiveTask;
 use App\Repository\TaskActiveRepository;
 use App\Repository\TaskArchiveRepository;
@@ -31,5 +32,10 @@ class TaskArchiveService extends AbstractController
             'deadline'=>$task->getDeadline()->format('d/m/Y')
 
         ]);
+    }
+    public function createTaskArchive(TaskArchive $task): void
+    {
+            $this->taskArchiveRepository->persist($task);
+            $this->taskArchiveRepository->flush();
     }
 }

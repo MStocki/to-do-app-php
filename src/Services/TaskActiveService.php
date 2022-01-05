@@ -3,21 +3,27 @@
 namespace App\Services;
 
 use App\Entity\TaskActive;
+use App\Entity\TaskArchive;
 use App\Form\AddActiveTask;
 use App\Form\EditActiveTask;
 use App\Repository\TaskActiveRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use DateTime;
 
 class TaskActiveService extends AbstractController
 {
     private TaskActiveRepository $taskActiveRepository;
+    private  TaskArchiveService $taskArchiveService;
 
-    public function __construct(TaskActiveRepository $taskActiveRepository)
+    public function __construct(
+        TaskActiveRepository $taskActiveRepository,
+        TaskArchiveService $taskArchiveService)
     {
         $this->taskActiveRepository = $taskActiveRepository;
+        $this->taskArchiveService = $taskArchiveService;
     }
 
     public function createTaskActive(Request $request): Response
@@ -73,8 +79,18 @@ class TaskActiveService extends AbstractController
     ]);
     }
 
-    public function closeTaskActive(Request $request, int $id):void
+    public function closeTaskActive(int $id):Response
     {
+        $task = $this->taskActiveRepository->closeTaskActive($id);
+        $taskArchive = new TaskArchive();
+        $taskArchive->setUser($task->getUser());
+        $taskArchive->setName($task->getName());
+        $taskArchive->setDescription($task->getDescription());
+        $taskArchive->setStatus($task->getStatus());
+        $taskArchive->setCreatedAt($task->getCreatedAt());
+        $taskArchive->setDeadline($task->getDeadline());
+        $this->taskArchiveService->createTaskArchive($taskArchive);
 
+        return new JsonResponse(['Przeniesiono zadanie do archiwum. Nr zadania: '=> $id]);
     }
 }

@@ -27,6 +27,14 @@ class TaskActiveRepository extends ServiceEntityRepository
     {
         $this->_em->flush();
     }
+    public function closeTaskActive($id):TaskActive
+    {
+
+         $task = $this->find($id);
+         $this->_em->remove($task);
+         $this->_em->flush();
+         return $task;
+    }
     // /**
     //  * @return TaskActive[] Returns an array of TaskActive objects
     //  */

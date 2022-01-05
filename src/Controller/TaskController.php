@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Services\TaskActiveService;
 use App\Services\TaskArchiveService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,4 +59,11 @@ class TaskController extends AbstractController
     {
         return $this->taskArchiveService->taskArchiveDetail($id);
     }
+
+    #[Route('/task/active/{id}/close', name: 'taskActiveClose', methods: ['POST'])]
+    public function closeActiveTask(int $id):Response
+    {
+        return $this->taskActiveService->closeTaskActive($id);
+    }
+
 }
