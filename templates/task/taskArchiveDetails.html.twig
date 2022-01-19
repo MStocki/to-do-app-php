@@ -2,30 +2,35 @@
 
 {% block title %}Twoje zadania{% endblock %}
 
+{%  block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+{% endblock %}
+
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
 <div class="example-wrapper">
-    <h1>
-        Zadanie
-    </h1>
-    <h4>
-        Nazwa: {{name}}
-    </h4>
-    <h4>
-        Opis: {{description}}
-    </h4>
-    <h4>
-        Status: {{status}}
-    </h4>
-    <h4>
-        Utworzone dnia: {{createdAt}}
-    </h4>
-    <h4>
-        Deadline: {{deadline}}
-    </h4>
+        <div>
+            <h1>
+               Zadanie
+            </h1>
+            <a href="{{ path('taskDelete', {'id': id}) }}">Usuń</a>
+        </div>
+        <h4>
+           <p>
+               Nazwa: {{name}}
+           </p>
+           <p>
+               Opis: {{description}}
+           </p>
+           <p>
+               Ostatni status: {{status}}
+           </p>
+           <p>
+               Utworzone dnia: {{createdAt}}
+           </p>
+           <p>
+               Deadline: {{deadline}}
+           </p>
+        </h4>
 </div>
 {% endblock %}

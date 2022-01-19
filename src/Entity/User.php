@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Config\TwigExtra\StringConfig;
 
 /**
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
@@ -36,16 +37,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 50)]
     private $lastName;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: TaskActive::class)]
-    private $tasksActive;
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Task::class)]
+    private $tasks;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: TaskArchive::class)]
-    private $tasksArchive;
 
     public function __construct()
     {
-        $this->tasksActive = new ArrayCollection();
-        $this->tasksArchive = new ArrayCollection();
+        $this->tasks = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -143,62 +142,38 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection|TaskActive[]
+     * @return Collection|Task[]
      */
-    public function getTasksActive(): Collection
+    public function getTasks(): Collection
     {
-        return $this->tasksActive;
+        return $this->tasks;
     }
 
-    public function addTasksActive(TaskActive $tasksActive): self
+    public function addTasks(Task $tasks): self
     {
-        if (!$this->tasksActive->contains($tasksActive)) {
-            $this->tasksActive[] = $tasksActive;
-            $tasksActive->setUser($this);
+        if (!$this->tasks->contains($tasks)) {
+            $this->tasks[] = $tasks;
+            $tasks->setUser($this);
         }
 
         return $this;
     }
 
-    public function removeTasksActive(TaskActive $tasksActive): self
+    public function removeTasks(Task $tasks): self
     {
-        if ($this->tasksActive->removeElement($tasksActive)) {
+        if ($this->tasks->removeElement($tasks)) {
             // set the owning side to null (unless already changed)
-            if ($tasksActive->getUser() === $this) {
-                $tasksActive->setUser(null);
+            if ($tasks->getUser() === $this) {
+                $tasks->setUser(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection|TaskArchive[]
-     */
-    public function getTasksArchive(): Collection
+    public function getFullName():String
     {
-        return $this->tasksArchive;
+        return $this->firstName . " " . $this->lastName ;
     }
 
-    public function addTasksArchive(TaskArchive $tasksArchive): self
-    {
-        if (!$this->tasksArchive->contains($tasksArchive)) {
-            $this->tasksArchive[] = $tasksArchive;
-            $tasksArchive->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTasksArchive(TaskArchive $tasksArchive): self
-    {
-        if ($this->tasksArchive->removeElement($tasksArchive)) {
-            // set the owning side to null (unless already changed)
-            if ($tasksArchive->getUser() === $this) {
-                $tasksArchive->setUser(null);
-            }
-        }
-
-        return $this;
-    }
 }

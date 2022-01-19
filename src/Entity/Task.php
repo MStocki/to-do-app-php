@@ -2,11 +2,11 @@
 
 namespace App\Entity;
 
-use App\Repository\TaskActiveRepository;
+use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: TaskActiveRepository::class)]
-class TaskActive
+#[ORM\Entity(repositoryClass: TaskRepository::class)]
+class Task
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,9 +28,12 @@ class TaskActive
     #[ORM\Column(type: 'date')]
     private $deadline;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasksActive')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
     private $user;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isActive;
 
     public function getId(): ?int
     {
@@ -105,6 +108,18 @@ class TaskActive
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

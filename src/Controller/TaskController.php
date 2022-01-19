@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Services\TaskActiveService;
-use App\Services\TaskArchiveService;
+use App\Services\TaskService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,58 +11,58 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class TaskController extends AbstractController
 {
-    private TaskActiveService $taskActiveService;
-    private TaskArchiveService $taskArchiveService;
+    private TaskService $taskService;
 
-    public function __construct(
-        TaskActiveService $taskActiveService,
-        TaskArchiveService $taskArchiveService)
+    public function __construct(TaskService $taskService)
     {
-        $this->taskActiveService = $taskActiveService;
-        $this->taskArchiveService = $taskArchiveService;
+        $this->taskService = $taskService;
     }
 
-    #[Route('/task/active/new', name: 'taskActiveNew')]
-    public function createTaskActive(Request $request): Response
+    #[Route('/task/new', name: 'taskNew')]
+    public function createTask(Request $request): Response
     {
-        return $this->taskActiveService->createTaskActive($request);
+        return $this->taskService->createTask($request);
     }
 
-    #[Route('/task/active/edit/{id}', name: 'taskActiveEdit')]
-    public function editTaskActive(Request $request, int $id): Response
+    #[Route('/task/edit/{id}', name: 'taskEdit')]
+    public function editTask(Request $request, int $id): Response
     {
-        return $this->taskActiveService->editTaskActive($request,$id);
-    }
-
-    #[Route('/task/active/close/{id}', name: 'taskActiveClose')]
-    public function closeTaskActive(Request $request, int $id): Response
-    {
-        return $this->taskActiveService->closeTaskActive($request,$id);
+        return $this->taskService->editTask($request,$id);
     }
 
     #[Route('/task', name: 'task')]
     public function index(): Response
     {
+        $tasksActive = $this->taskService->getActiveTasks();
+        $tasksArchive = $this->taskService->getArchiveTasks();
         return $this->render('task/index.html.twig', [
+            'tasksActive' => $tasksActive,
+            'tasksArchive' => $tasksArchive,
         ]);
     }
 
     #[Route('/task/active/{id}', name: 'taskActiveDetails', methods: ['GET'])]
     public function  taskActiveDetail(int $id):Response
     {
-        return $this->taskActiveService->taskActiveDetail($id);
+        return $this->taskService->taskActiveDetail($id);
     }
 
     #[Route('/task/archive/{id}', name: 'taskArchiveDetails', methods: ['GET'])]
-    public function taskArchiveDetail(int $id): Response
+    public function  taskArchiveDetail(int $id):Response
     {
-        return $this->taskArchiveService->taskArchiveDetail($id);
+        return $this->taskService->taskArchiveDetail($id);
     }
 
-    #[Route('/task/active/{id}/close', name: 'taskActiveClose', methods: ['POST'])]
-    public function closeActiveTask(int $id):Response
+    #[Route('/task/{id}/close', name: 'taskClose', methods: ['POST'])]
+    public function closeTask(int $id):Response
     {
-        return $this->taskActiveService->closeTaskActive($id);
+        return $this->taskService->closeTask($id);
     }
 
+    #[Route('/task/{id}/delete', name: 'taskDelete', methods: ['GET'])]
+    public function deleteTask(int $id):Response
+    {
+        $this->taskService->deleteTask($id);
+        return $this->redirectToRoute('task');
+    }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\TaskActive;
+use App\Entity\Task;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class AddActiveTask extends AbstractType
+class AddTask extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -29,7 +29,7 @@ class AddActiveTask extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => TaskActive::class,
+            'data_class' => Task::class,
         ]);
     }
 }
