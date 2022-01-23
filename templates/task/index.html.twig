@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Twoje zadania{% endblock %}
+
+{%  block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">  
+        <h1>
+            Witaj {{app.user.getFullName()}}
+        </h1>
+        <h4>
+            {{app.user.email}}
+            <a href="{{ path('app_logout') }}">Wyloguj</a>
+        </h4>
+    <div>
+        <h4>Aktywne zadania</h4>
+        {% if not tasksActive and not tasksActiveCloseToDeadline %}
+            <p>Brak aktywnych zadań!</p>
+        {% endif %}
+        <ul>
+            {% for task in tasksActiveCloseToDeadline%}
+                <li>
+                    <span class="close-deadline">{{task[0].name}} Do deadline'u zostało: {{ task[1]}} dni! </span>
+                    <a href="{{ path('taskActiveDetails', {'id': task[0].id}) }}">Szczegóły</a>
+                    <button onClick="closeTask({{ task[0].id }})">Zakończ</button>
+                </li>
+            {% endfor%}
+            {% for task in tasksActive%}
+                <li>
+                    {{task.name}}
+                    <a href="{{ path('taskActiveDetails', {'id': task.id}) }}">Szczegóły</a>
+                    <button onClick="closeTask({{ task.id }})">Zakończ</button>
+                </li>
+            {% endfor%}
+        </ul>
+        <a href="{{ path('taskNew') }}">Dodaj zadanie</a>
+    </div>
+    <div>
+        <h4>Archiwalne zadania</h4>
+        {% if not tasksArchive %}
+            <p>Archiwum zadań jest puste!</p>
+        {% endif %}
+        <ul>
+            {% for task in tasksArchive%}
+                <li>
+                    {{task.name}}
+                    <a href="{{ path('taskArchiveDetails', {'id': task.id}) }}">Szczegóły</a>
+                </li>
+            {% endfor%}
+        </ul>
+    </div>
+</div>
+    <script>
+        function closeTask(id) {
+            $.ajax({
+                    url: "/task/"+id+"/close",
+                    type:'POST'
+                })
+                .fail(function(){
+                    alert("error");
+                })
+        }
+    </script>
+
+{% endblock %}

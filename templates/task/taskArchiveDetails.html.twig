@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Twoje zadania{% endblock %}
+
+{%  block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}" />
+{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+        <div>
+            <h1>
+               Zadanie
+            </h1>
+            <a href="{{ path('taskDelete', {'id': id}) }}">Usuń</a>
+        </div>
+        <h4>
+           <p>
+               Nazwa: {{name}}
+           </p>
+           <p>
+               Opis: {{description}}
+           </p>
+           <p>
+               Ostatni status: {{status}}
+           </p>
+           <p>
+               Utworzone dnia: {{createdAt}}
+           </p>
+           <p>
+               Deadline: {{deadline}}
+           </p>
+        </h4>
+</div>
+{% endblock %}
