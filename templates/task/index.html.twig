@@ -18,10 +18,17 @@
         </h4>
     <div>
         <h4>Aktywne zadania</h4>
-        {% if not tasksActive %}
+        {% if not tasksActive and not tasksActiveCloseToDeadline %}
             <p>Brak aktywnych zadań!</p>
         {% endif %}
         <ul>
+            {% for task in tasksActiveCloseToDeadline%}
+                <li>
+                    <span class="close-deadline">{{task[0].name}} Do deadline'u zostało: {{ task[1]}} dni! </span>
+                    <a href="{{ path('taskActiveDetails', {'id': task[0].id}) }}">Szczegóły</a>
+                    <button onClick="closeTask({{ task[0].id }})">Zakończ</button>
+                </li>
+            {% endfor%}
             {% for task in tasksActive%}
                 <li>
                     {{task.name}}

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Task;
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -33,12 +34,26 @@ class TaskRepository extends ServiceEntityRepository
 //         $this->_em->flush();
 //         return $task;
 //    }
-    public function getActiveTasks(User $user)
+    public function getActiveTasks(User $user,int $dayToDeadline)
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.user = :user')
             ->andWhere('t.isActive = 1')
-            ->setParameter('user', $user);
+            ->andWhere('t.deadline - CURRENT_DATE() > :dayToDeadline')
+            ->setParameter('user', $user)
+            ->setParameter('dayToDeadline', $dayToDeadline);
+        $query = $qb->getQuery();
+        return $query->execute();
+    }
+    public function getActiveTaskCloseDeadline(User $user, int $dayToDeadline)
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->select('t,t.deadline - CURRENT_DATE()')
+            ->where('t.user = :user')
+            ->andWhere('t.isActive = 1')
+            ->andWhere('t.deadline - CURRENT_DATE() <= :dayToDeadline')
+            ->setParameter('user', $user)
+            ->setParameter('dayToDeadline', $dayToDeadline);
         $query = $qb->getQuery();
         return $query->execute();
     }

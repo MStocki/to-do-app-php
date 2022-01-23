@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'home')]
+    #[Route(path: '/', name: 'home')]
     public function index(): Response
     {
         if ($this->getUser()) {

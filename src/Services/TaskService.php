@@ -3,109 +3,54 @@
 namespace App\Services;
 
 use App\Entity\Task;
-use App\Form\AddTask;
-use App\Form\EditTask;
+use App\Entity\User;
 use App\Repository\TaskRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use DateTime;
+use DateTimeImmutable;
 
-class TaskService extends AbstractController
+class TaskService
 {
-    private TaskRepository $taskRepository;
 
+    public function __construct(
+        private TaskRepository $taskRepository
+    ) {}
 
-    public function __construct(TaskRepository $taskRepository)
+    public function createTask(User $user,Task $task)
     {
-        $this->taskRepository = $taskRepository;
-    }
-
-    public function createTask(Request $request): Response
-    {
-        $user=$this->getUser();
-        $task = new Task();
         $task->setUser($user);
-        $task->setCreatedAt(new DateTime());
+        $task->setCreatedAt(new DateTimeImmutable());
         $task->setIsActive(true);
-        $form=$this->createForm(AddTask::class, $task);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $this->taskRepository->create($task);
-            return $this->redirectToRoute('task');
-        }
-
-        return $this->render('task/addTask.html.twig', [
-            'addTaskForm' => $form->createView(),
-        ]);
+        $this->taskRepository->create($task);
     }
 
-    public function taskActiveDetail(int $id): Response
+    public function getTask(int $id): Task
     {
-        $task = $this->taskRepository->find($id);
-
-        return $this->render('task/taskActiveDetails.html.twig', [
-            'id' => $id,
-            'name' => $task->getName(),
-            'description' =>$task->getDescription(),
-            'status' =>$task->getStatus(),
-            'createdAt'=>$task->getCreatedAt()->format('d/m/Y'),
-            'deadline'=>$task->getDeadline()->format('d/m/Y')
-        ]);
+        return $this->taskRepository->find($id);
     }
 
-    public function taskArchiveDetail(int $id): Response
+    public function editTask()
     {
-        $task = $this->taskRepository->find($id);
-
-        return $this->render('task/taskArchiveDetails.html.twig', [
-            'id' => $id,
-            'name' => $task->getName(),
-            'description' =>$task->getDescription(),
-            'status' =>$task->getStatus(),
-            'createdAt'=>$task->getCreatedAt()->format('d/m/Y'),
-            'deadline'=>$task->getDeadline()->format('d/m/Y')
-        ]);
+        $this->taskRepository->flush();
     }
 
-    public function editTask(Request $request, int $id): Response
-    {
-        $task = $this->taskRepository->find($id);
-        $form=$this->createForm(EditTask::class, $task);
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()) {
-            $this->taskRepository->flush();
-            return $this->redirectToRoute('taskActiveDetails',['id' =>$id]);
-        }
-        return $this->render('task/editTask.html.twig', [
-            'editTaskForm' => $form->createView(),
-            'name' =>$task->getName(),
-            'status'=>$task->getStatus(),
-            'createdAt'=>$task->getCreatedAt()->format('d/m/Y'),
-            'deadline'=>$task->getDeadline()->format('d/m/Y')
-    ]);
-    }
-
-    public function closeTask(int $id):Response
+    public function closeTask(int $id)
     {
         $task = $this->taskRepository->find($id);
         $task->setIsActive(false);
         $this->taskRepository->flush();
-        return new JsonResponse(['Przeniesiono zadanie do archiwum. Nr zadania: '=> $id]);
     }
 
-    public function getActiveTasks()
+    public function getActiveTasks(User $user, int $daysToDeadline)
     {
-        $user=$this->getUser();
-        return $this->taskRepository->getActiveTasks($user);
+       return $this->taskRepository->getActiveTasks($user,$daysToDeadline);
     }
 
-    public function getArchiveTasks()
+    public function getActiveTasksCloseToDeadline(User $user, int $daysToDeadline)
     {
-        $user=$this->getUser();
+        return $this->taskRepository->getActiveTaskCloseDeadline($user,$daysToDeadline);
+    }
+
+    public function getArchiveTasks(User $user)
+    {
         return $this->taskRepository->getArchiveTasks($user);
     }
 
