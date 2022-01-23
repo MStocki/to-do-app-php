@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Services;
 
 use App\Entity\Task;
@@ -14,7 +16,7 @@ class TaskService
         private TaskRepository $taskRepository
     ) {}
 
-    public function createTask(User $user,Task $task)
+    public function createTask(User $user,Task $task): void
     {
         $task->setUser($user);
         $task->setCreatedAt(new DateTimeImmutable());
@@ -27,34 +29,34 @@ class TaskService
         return $this->taskRepository->find($id);
     }
 
-    public function editTask()
+    public function editTask():void
     {
         $this->taskRepository->flush();
     }
 
-    public function closeTask(int $id)
+    public function closeTask(int $id): void
     {
         $task = $this->taskRepository->find($id);
         $task->setIsActive(false);
         $this->taskRepository->flush();
     }
 
-    public function getActiveTasks(User $user, int $daysToDeadline)
+    public function getActiveTasks(User $user, int $daysToDeadline): array
     {
        return $this->taskRepository->getActiveTasks($user,$daysToDeadline);
     }
 
-    public function getActiveTasksCloseToDeadline(User $user, int $daysToDeadline)
+    public function getActiveTasksCloseToDeadline(User $user, int $daysToDeadline) : array
     {
         return $this->taskRepository->getActiveTaskCloseDeadline($user,$daysToDeadline);
     }
 
-    public function getArchiveTasks(User $user)
+    public function getArchiveTasks(User $user): array
     {
         return $this->taskRepository->getArchiveTasks($user);
     }
 
-    public function deleteTask(int $id):void
+    public function deleteTask(int $id): void
     {
         $this->taskRepository->delete($id);
     }

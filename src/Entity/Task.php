@@ -1,9 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\TaskRepository;
 use Doctrine\ORM\Mapping as ORM;
+
+
+enum StatusTask: string
+{
+    case NEW = 'Nowe';
+    case TEST = 'Do testów';
+    case ERROR = 'Błąd';
+    case ANALYSIS = 'Analiza';
+}
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
@@ -120,7 +131,6 @@ class Task
     public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
-
         return $this;
     }
 }

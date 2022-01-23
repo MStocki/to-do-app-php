@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Task;
 use App\Entity\User;
-use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,15 +27,7 @@ class TaskRepository extends ServiceEntityRepository
         $this->_em->flush();
     }
 
-//
-//    public function closeTaskActive($id):Task
-//    {
-//         $task = $this->find($id);
-//         $this->_em->remove($task);
-//         $this->_em->flush();
-//         return $task;
-//    }
-    public function getActiveTasks(User $user,int $dayToDeadline)
+    public function getActiveTasks(User $user,int $dayToDeadline):array
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.user = :user')
@@ -45,7 +38,7 @@ class TaskRepository extends ServiceEntityRepository
         $query = $qb->getQuery();
         return $query->execute();
     }
-    public function getActiveTaskCloseDeadline(User $user, int $dayToDeadline)
+    public function getActiveTaskCloseDeadline(User $user, int $dayToDeadline):array
     {
         $qb = $this->createQueryBuilder('t')
             ->select('t,t.deadline - CURRENT_DATE()')
@@ -57,7 +50,7 @@ class TaskRepository extends ServiceEntityRepository
         $query = $qb->getQuery();
         return $query->execute();
     }
-    public function getArchiveTasks(User $user)
+    public function getArchiveTasks(User $user):array
     {
         $qb = $this->createQueryBuilder('t')
             ->where('t.user = :user')

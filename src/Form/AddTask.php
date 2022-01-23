@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
+use App\Entity\StatusTask;
 use App\Entity\Task;
-use Doctrine\Common\Annotations\Annotation\Enum;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,10 +20,10 @@ class AddTask extends AbstractType
             ->add('description')
             ->add('status', ChoiceType::class,[
                 'choices'=>[
-                'Nowe' =>'Nowe',
-                'W toku' => 'W toku',
-                'Do testów' =>'Do testów',
-                'Błąd' => 'Błąd',
+                    StatusTask::NEW->value => StatusTask::NEW->value,
+                    StatusTask::TEST->value =>StatusTask::TEST->value,
+                    StatusTask::ERROR->value => StatusTask::ERROR->value,
+                    StatusTask::ANALYSIS->value => StatusTask::ANALYSIS->value,
                 ],
             ])
             ->add('deadline');
